@@ -1,10 +1,11 @@
 from key import Key
 from room_matrix import RoomMatrix
+from coordinates import Coordinates
 
 class Game:
     def init(self, roomMatrix: RoomMatrix):
         self.roomMatrix = roomMatrix
-        self.currentCoordinates = [0, 0]
+        self.currentCoordinates = Coordinates(0, 0)
         self.keysInInventory = []
 
     def currentRoom(self):
