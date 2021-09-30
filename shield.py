@@ -7,3 +7,12 @@ class Shield(Item):
 
     def getProtection(self):
         return self.protection
+
+    def upgrade(self):
+        self.protection += 1
+    
+    def downgrade(self):
+        self.protection -= 1
+
+    def setProtection(self, protection: int):
+        self.protection = protection

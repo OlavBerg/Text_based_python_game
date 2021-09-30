@@ -7,3 +7,12 @@ class Sword(Item):
 
     def getSharpness(self):
         return self.sharpness
+
+    def upgrade(self):
+        self.sharpness += 1
+
+    def downgrade(self):
+        self.sharpness -= 1
+
+    def setSharpness(self, sharpness: int):
+        self.sharpness = sharpness
