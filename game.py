@@ -2,7 +2,7 @@ from key import Key
 from room_matrix import RoomMatrix
 
 class Game:
-    def init(self, roomMatrix: RoomMatrix):
+    def __init__(self, roomMatrix: RoomMatrix):
         self.roomMatrix = roomMatrix
         self.currentRoom = roomMatrix.getRoom(0, 0)
         self.keysInInventory = []
@@ -35,7 +35,7 @@ class Game:
             else:
                 print("Error: Invalid direction.")
 
-            nextRoom = self.roomMatrix.getRoom(nextCoordinates)
+            nextRoom = self.roomMatrix.getRoom(nextCoordinates[0], nextCoordinates[1])
             self.currentRoom = nextRoom
 
             print("You walk through the door.")
@@ -57,7 +57,7 @@ class Game:
         pickedUpKey = None
 
         for key in self.currentRoom.getKeysOnFloor():
-            if key.getColor() == color & key.getShape() == shape:
+            if key.getColor() == color and key.getShape() == shape:
                 pickedUpKey = key
                 break
 
@@ -72,7 +72,6 @@ class Game:
 
     def directionInfo(self, direction: str):
         door = self.currentRoom.getDoor(direction)
-
         if door == None:
             return "Wall"
         elif door.isLocked():
@@ -137,7 +136,7 @@ class Game:
         selectedKey = None
 
         for key in self.keysInInventory:
-            if key.getColor() == color & key.getShape() == shape:
+            if key.getColor() == color and key.getShape() == shape:
                 selectedKey = key
                 break
         
@@ -210,7 +209,7 @@ class Game:
                         continue
 
                 elif subCommands[0] == "quit":
-                    self.isRunning = False
+                    isRunning = False
                     print("Quitting the game.")
                     break
 
