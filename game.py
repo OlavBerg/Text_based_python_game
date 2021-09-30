@@ -150,12 +150,12 @@ class Game:
 
         while isRunning:
             print("")
+            """
+            riddle = self.currentRoom().getRiddle()
 
-            trap = self.currentRoom().getTrap()
-
-            if trap != None: 
-                trap.activate()
-
+            if riddle != None: 
+                riddle.activate()
+            """
             self.printGameState()
             print("")
             print("Type 'c' to show possible commands.")
