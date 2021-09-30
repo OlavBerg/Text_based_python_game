@@ -3,12 +3,10 @@ class Key:
         self.color = color
         self.shape = shape
 
-    def getColor(self):
-        return self.color
+        def getColor(self):
+            return self.color
 
-    def getShape(self):
-        return self.shape
-
-
-
-
+        def getShape(self):
+            return self.shape
+    
+    
