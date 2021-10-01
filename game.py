@@ -54,6 +54,7 @@ class Game:
 
         elif door.unlock(key):
             print("You unlock the door.")
+            self.keysInInventory.remove(key)
             return True
 
         else:
