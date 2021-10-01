@@ -100,8 +100,8 @@ class Game:
 
         print("")
 
-        print("Keys on floor")
-        print("-------------")
+        print("Keys on the floor")
+        print("-----------------")
 
         for key in self.currentRoom.getKeysOnFloor():
             color = key.getColor()
@@ -111,8 +111,8 @@ class Game:
 
         print("")
 
-        print("Keys in inventory")
-        print("-----------------")
+        print("Keys in your inventory")
+        print("----------------------")
 
         for key in self.keysInInventory:
             color = key.getColor()
