@@ -146,6 +146,7 @@ class Game:
         """Runs the game."""
 
         isRunning = True
+        print("Welcome to the game!")
 
         while isRunning:
             print("")
