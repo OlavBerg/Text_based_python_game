@@ -46,12 +46,19 @@ class Game:
 
         if door == None:
             print("There is no door in that direction.")
+            return False
+
         elif not door.isLocked():
             print("The door is already open.")
+            return False
+
         elif door.unlock(key):
             print("You unlock the door.")
+            return True
+
         else:
             print("The key doesn't match.")
+            return False
 
     def pickKey(self, color: str, shape: str):
         pickedUpKey = None
