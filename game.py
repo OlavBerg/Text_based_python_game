@@ -183,16 +183,13 @@ class Game:
                         continue
 
                 elif subCommands[0] == "pick":
-                    try:
-                        keyColor = subCommands[1]
-                        keyShape = subCommands[2]
+                    keyColor = subCommands[1]
+                    keyShape = subCommands[2]
 
-                        if self.pickKey(keyColor, keyShape):
-                            break
-                        else:
-                            continue
-                    except:
-                        print("Please type the color and shape of the key you want to pick up!")
+                    if self.pickKey(keyColor, keyShape):
+                        break
+                    else:
+                        continue
 
                 elif subCommands[0] == "unlock":
                     direction = subCommands[1]
