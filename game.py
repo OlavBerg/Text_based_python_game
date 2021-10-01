@@ -165,21 +165,17 @@ class Game:
                 subCommands = playerCommand.split(" ")
 
                 if subCommands[0] == "move":
-                    try:
-                        direction = subCommands[1]
+                    direction = subCommands[1]
 
-                        if not direction in ["north", "east", "south", "west"]:
-                            print("Invalid direction.")
-                            continue
+                    if not direction in ["north", "east", "south", "west"]:
+                        print("Invalid direction.")
+                        continue
 
-                        direction = direction[0]
+                    direction = direction[0]
 
-                        if self.move(direction):
-                            break
-                        else:
-                            continue
-                    except:
-                        print("Please type the direction you want to move!")
+                    if self.move(direction):
+                        break
+                    else:
                         continue
 
                 elif subCommands[0] == "pick":
