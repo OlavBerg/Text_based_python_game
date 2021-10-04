@@ -31,17 +31,33 @@ class Room:
       return self.keysOnFloor
 
     def getDoor(self, direction: str):
-        return self.listOfDoor
+        if direction == "n" :
+            return self.listOfDoor[0]
+
+        elif direction == "e" :
+            return self.listOfDoor[1]
+
+        elif direction == "s" :
+            return self.listOfDoor[2]
+
+        elif direction == "w" :
+            return self.listOfDoor[3]
+
 
     def getCoordinates(self):
         return self.coordinates
 
-    def getDoor(self, direction: str):
+    def getDirection(self, direction: str):
         """Returns the door in the given direction, which is either 'n', 'e', 's' or 'w'."""
-        return direction
+        return direction 
 
     def getKeysOnFloor(self):
         return self.keysOnFloor
+
+    def placeKeyOnFloor(self, key: Key) :
+        self.keysOnFloor.append(key)
+
+
         
             
 

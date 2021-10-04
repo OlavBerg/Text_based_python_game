@@ -2,13 +2,13 @@ from key import Key
 
 
 class Door: 
-    def __init__(self, initiallyClosed: bool, color: str = None, shape: str = None):
-        self.closed = initiallyClosed
+    def __init__(self, initiallyLocked: bool, color: str = None, shape: str = None):
+        self.locked = initiallyLocked
         self.color = color
         self.shape = shape
 
-    def isClosed(self):
-        return self.closed
+    def isLocked(self):
+        return self.locked
 
     def getColor(self):
         return self.color
@@ -21,6 +21,6 @@ class Door:
         the door unlocks and True is returned. Otherwise False is returned."""
 
         if self.color == key.color and self.shape == key.shape :
-            self.closed = False
+            self.locked = False
             return True
         

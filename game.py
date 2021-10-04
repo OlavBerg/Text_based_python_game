@@ -2,7 +2,7 @@ from key import Key
 from room_matrix import RoomMatrix
 
 class Game:
-    def init(self, roomMatrix: RoomMatrix):
+    def __init__(self, roomMatrix: RoomMatrix):
         self.roomMatrix = roomMatrix
         self.currentRoom = roomMatrix.getRoom(0, 0)
         self.keysInInventory = []
@@ -35,7 +35,7 @@ class Game:
             else:
                 print("Error: Invalid direction.")
 
-            nextRoom = self.roomMatrix.getRoom(nextCoordinates)
+            nextRoom = self.roomMatrix.getRoom(nextCoordinates[0], nextCoordinates[1])
             self.currentRoom = nextRoom
 
             print("You walk through the door.")
@@ -46,18 +46,26 @@ class Game:
 
         if door == None:
             print("There is no door in that direction.")
+            return False
+
         elif not door.isLocked():
             print("The door is already open.")
+            return False
+
         elif door.unlock(key):
             print("You unlock the door.")
+            self.keysInInventory.remove(key)
+            return True
+
         else:
             print("The key doesn't match.")
+            return False
 
     def pickKey(self, color: str, shape: str):
         pickedUpKey = None
 
         for key in self.currentRoom.getKeysOnFloor():
-            if key.getColor() == color & key.getShape() == shape:
+            if key.getColor() == color and key.getShape() == shape:
                 pickedUpKey = key
                 break
 
@@ -72,7 +80,6 @@ class Game:
 
     def directionInfo(self, direction: str):
         door = self.currentRoom.getDoor(direction)
-
         if door == None:
             return "Wall"
         elif door.isLocked():
@@ -101,8 +108,8 @@ class Game:
 
         print("")
 
-        print("Keys on floor")
-        print("-------------")
+        print("Keys on the floor")
+        print("-----------------")
 
         for key in self.currentRoom.getKeysOnFloor():
             color = key.getColor()
@@ -112,8 +119,8 @@ class Game:
 
         print("")
 
-        print("Keys in inventory")
-        print("-----------------")
+        print("Keys in your inventory")
+        print("----------------------")
 
         for key in self.keysInInventory:
             color = key.getColor()
@@ -137,7 +144,7 @@ class Game:
         selectedKey = None
 
         for key in self.keysInInventory:
-            if key.getColor() == color & key.getShape() == shape:
+            if key.getColor() == color and key.getShape() == shape:
                 selectedKey = key
                 break
         
@@ -147,15 +154,16 @@ class Game:
         """Runs the game."""
 
         isRunning = True
+        print("Welcome to the game!")
 
         while isRunning:
             print("")
+            """
+            riddle = self.currentRoom().getRiddle()
 
-            trap = self.currentRoom().getTrap()
-
-            if trap != None: 
-                trap.activate()
-
+            if riddle != None: 
+                riddle.activate()
+            """
             self.printGameState()
             print("")
             print("Type 'c' to show possible commands.")
@@ -165,59 +173,62 @@ class Game:
                 playerCommand = input("Command: ").lower()
                 subCommands = playerCommand.split(" ")
 
-                if subCommands[0] == "move":
-                    direction = subCommands[1]
+                try:
+                    if subCommands[0] == "move":
+                        direction = subCommands[1]
 
-                    if not direction in ["north", "east", "south", "west"]:
-                        print("Invalid direction.")
-                        continue
+                        if not direction in ["north", "east", "south", "west"]:
+                            print("Invalid direction.")
+                            continue
 
-                    direction = direction[0]
+                        direction = direction[0]
 
-                    if self.move(direction):
+                        if self.move(direction):
+                            break
+                        else:
+                            continue
+
+                    elif subCommands[0] == "pick":
+                        keyColor = subCommands[1]
+                        keyShape = subCommands[2]
+
+                        if self.pickKey(keyColor, keyShape):
+                            break
+                        else:
+                            continue
+
+                    elif subCommands[0] == "unlock":
+                        direction = subCommands[1]
+                        keyColor = subCommands[2]
+                        keyShape = subCommands[3]
+                        key = self.getKeyFromInventory(keyColor, keyShape)
+
+                        if not direction in ["north", "east", "south", "west"]:
+                            print("Invalid direction.")
+                            continue
+
+                        if key == None:
+                            print("You don't have such a key.")
+                            continue
+
+                        direction = direction[0]
+
+                        if self.unlock(direction, key):
+                            break
+                        else:
+                            continue
+
+                    elif subCommands[0] == "quit":
+                        isRunning = False
+                        print("Quitting the game.")
                         break
+
+                    elif subCommands[0] == "c":
+                        self.showCommands()
+                        continue
+
                     else:
+                        print("Invalid command.")
                         continue
-
-                elif subCommands[0] == "pick":
-                    keyColor = subCommands[1]
-                    keyShape = subCommands[2]
-
-                    if self.pickKey(keyColor, keyShape):
-                        break
-                    else:
-                        continue
-
-                elif subCommands[0] == "unlock":
-                    direction = subCommands[1]
-                    keyColor = subCommands[2]
-                    keyShape = subCommands[3]
-                    key = self.getKeyFromInventory(keyColor, keyShape)
-
-                    if not direction in ["north", "east", "south", "west"]:
-                        print("Invalid direction.")
-                        continue
-
-                    if key == None:
-                        print("You don't have such a key.")
-                        continue
-
-                    direction = direction[0]
-
-                    if self.unlock(direction, key):
-                        break
-                    else:
-                        continue
-
-                elif subCommands[0] == "quit":
-                    self.isRunning = False
-                    print("Quitting the game.")
-                    break
-
-                elif subCommands[0] == "c":
-                    self.showCommands()
-                    continue
-
-                else:
-                    print("Invalid command.")
-                    continue
+                except:
+                    print("Not enough subcommands for the command '" + subCommands[0] + "'. Please type 'c' to view how the command works.")
