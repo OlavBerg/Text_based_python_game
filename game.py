@@ -6,7 +6,7 @@ class Game:
     def init(self, roomMatrix: RoomMatrix):
         self.roomMatrix = roomMatrix
         self.currentCoordinates = Coordinates(0, 0)
-        self.keysInInventory = []
+        self.inventory = []
 
     def currentRoom(self):
         return self.roomMatrix.getRoom(self.currentCoordinates)
@@ -61,7 +61,7 @@ class Game:
             print("There is no such key on the floor.")
             return False
         else:
-            self.keysInInventory.append(pickedUpKey)
+            self.inventory.append(pickedUpKey)
             self.currentRoom().removeKey(key)
             print("You pick up the " + color + " " + shape + " key.")
             return True
@@ -109,7 +109,7 @@ class Game:
         print("Keys in inventory")
         print("-----------------")
 
-        for key in self.keysInInventory:
+        for key in self.inventory:
             color = key.getColor()
             shape = key.getShape()
             
@@ -126,11 +126,19 @@ class Game:
         print("• c                                                                   Show possible commands.")
         print("")
 
+    def getInventoryItemsOfType(self, itemType: type):
+        itemList = []
+
+        for item in self.inventory:
+            if isinstance(item, itemType):
+                itemList.append(item)
+
+        return itemList
 
     def getKeyFromInventory(self, color: str, shape: str):
         selectedKey = None
 
-        for key in self.keysInInventory:
+        for key in self.getInventoryItemsOfType(Key):
             if key.getColor() == color & key.getShape() == shape:
                 selectedKey = key
                 break
