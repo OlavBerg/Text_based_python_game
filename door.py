@@ -23,4 +23,10 @@ class Door:
         if self.color == key.color and self.shape == key.shape :
             self.locked = False
             return True
+
+    def setColor(self, color: str):
+        pass
+
+    def setShape(self, shape: str):
+        pass
         

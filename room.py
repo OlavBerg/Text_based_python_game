@@ -2,10 +2,18 @@ from door import Door
 from key import Key
 
 class Room:
-    def __init__(self, coordinates: list[int]):
-        self.coordinates = coordinates
-        self.listOfDoor = [None, None, None, None]
-        self.keysOnFloor = []
+    def __init__(self, listOfDoor: list[Door] = None, keysOnFloor: list[Key] = None):
+        if listOfDoor == None:
+            self.listOfDoor = [None, None, None, None]
+        else:
+            self.listOfDoor = listOfDoor
+
+        if keysOnFloor == None:
+            self.keysOnFloor = []
+        else:
+            self.keysOnFloor = keysOnFloor
+
+        self.finnish = False #True if the room is the finnish room. False otherwise.
 
 
     def setDoor(self, direction: str, door: Door):
@@ -56,6 +64,18 @@ class Room:
 
     def placeKeyOnFloor(self, key: Key) :
         self.keysOnFloor.append(key)
+
+    def rotate(self, direction: str):
+        """Rotates the room in the given direction. 'direction' is either 'c' (clockwise) or 'a' (anticlockwise)."""
+        pass
+
+    def isFinnish(self):
+        """Returns True if the room is a finnish room. Returns False otherwise."""
+        pass
+
+    def isEmpty(self):
+        """Returns True if the room contains no doors and no keys. Returns False otherwise."""
+        pass
 
 
         
