@@ -25,8 +25,8 @@ class Door:
             return True
 
     def setColor(self, color: str):
-        pass
+        self.color = color
 
     def setShape(self, shape: str):
-        pass
+        self.shape = shape
         
