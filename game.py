@@ -1,16 +1,20 @@
 from key import Key
 from room_matrix import RoomMatrix
+from coordinates import Coordinates
 
 class Game:
     def __init__(self, roomMatrix: RoomMatrix):
         self.roomMatrix = roomMatrix
-        self.currentRoom = roomMatrix.getRoom(0, 0)
-        self.keysInInventory = []
+        self.currentCoordinates = Coordinates(0, 0)
+        self.inventory = []
+
+    def currentRoom(self):
+        return self.roomMatrix.getRoom(self.currentCoordinates)
 
     def move(self, direction: str):
         """If possible, moves the player to the next room in the given direction, which is either 'n', 'e', 's' or 'w'."""
 
-        door = self.currentRoom.getDoor(direction)
+        door = self.currentRoom().getDoor(direction)
 
         if door == None:
             print("There is no door in that direction.")
@@ -19,30 +23,22 @@ class Game:
             print("The door is locked.")
             return False
         else:
-            currentCoordinates = self.currentRoom.getCoordinates()
-            currentXCoordinate = currentCoordinates[0]
-            currentYCoordinate = currentCoordinates[1]
-
-            nextCoordinates = None
             if direction == "n":
-                nextCoordinates = [currentXCoordinate - 1, currentYCoordinate]
+                self.currentCoordinates[0] -= 1
             elif direction == "e":
-                nextCoordinates = [currentXCoordinate, currentYCoordinate + 1]
+                self.currentCoordinates[1] += 1
             elif direction == "s":
-                nextCoordinates = [currentXCoordinate + 1, currentYCoordinate]
+                self.currentCoordinates[0] += 1
             elif direction == "w":
-                nextCoordinates = [currentXCoordinate, currentYCoordinate - 1]
+                self.currentCoordinates[1] -= 1
             else:
                 print("Error: Invalid direction.")
-
-            nextRoom = self.roomMatrix.getRoom(nextCoordinates[0], nextCoordinates[1])
-            self.currentRoom = nextRoom
 
             print("You walk through the door.")
             return True
 
     def unlock(self, direction: str, key: Key):
-        door = self.currentRoom.getDoor(direction)
+        door = self.currentRoom().getDoor(direction)
 
         if door == None:
             print("There is no door in that direction.")
@@ -64,7 +60,7 @@ class Game:
     def pickKey(self, color: str, shape: str):
         pickedUpKey = None
 
-        for key in self.currentRoom.getKeysOnFloor():
+        for key in self.currentRoom().getKeysOnFloor():
             if key.getColor() == color and key.getShape() == shape:
                 pickedUpKey = key
                 break
@@ -73,13 +69,14 @@ class Game:
             print("There is no such key on the floor.")
             return False
         else:
-            self.keysInInventory.append(pickedUpKey)
-            self.currentRoom.removeKey(key)
+            self.inventory.append(pickedUpKey)
+            self.currentRoom().removeKey(key)
             print("You pick up the " + color + " " + shape + " key.")
             return True
 
     def directionInfo(self, direction: str):
-        door = self.currentRoom.getDoor(direction)
+        door = self.currentRoom().getDoor(direction)
+
         if door == None:
             return "Wall"
         elif door.isLocked():
@@ -94,10 +91,8 @@ class Game:
         """Prints the state if the game. Includes the current room, the doors in the room and the keys on the floor."""
         print("--------------------------------------------------------------------------------------------------------------------------------------------------------")
 
-        currentCoordinates = self.currentRoom.getCoordinates()
-        currentXCoordinate = currentCoordinates[0]
-        currentYCoordinate = currentCoordinates[1]
-        print("Current room: (" + str(currentXCoordinate) + ", " + str(currentYCoordinate) + ")")
+
+        print("Current room: (" + str(self.currentCoordinates[0]) + ", " + str(self.currentCoordinates[1]) + ")")
 
         print("")
 
@@ -111,7 +106,7 @@ class Game:
         print("Keys on the floor")
         print("-----------------")
 
-        for key in self.currentRoom.getKeysOnFloor():
+        for key in self.currentRoom().getKeysOnFloor():
             color = key.getColor()
             shape = key.getShape()
             
@@ -122,7 +117,7 @@ class Game:
         print("Keys in your inventory")
         print("----------------------")
 
-        for key in self.keysInInventory:
+        for key in self.inventory:
             color = key.getColor()
             shape = key.getShape()
             
@@ -139,12 +134,20 @@ class Game:
         print("• c                                                                   Show possible commands.")
         print("")
 
+    def getInventoryItemsOfType(self, itemType: type):
+        itemList = []
+
+        for item in self.inventory:
+            if isinstance(item, itemType):
+                itemList.append(item)
+
+        return itemList
 
     def getKeyFromInventory(self, color: str, shape: str):
         selectedKey = None
 
-        for key in self.keysInInventory:
-            if key.getColor() == color and key.getShape() == shape:
+        for key in self.getInventoryItemsOfType(Key):
+            if key.getColor() == color & key.getShape() == shape:
                 selectedKey = key
                 break
         
@@ -158,12 +161,6 @@ class Game:
 
         while isRunning:
             print("")
-            """
-            riddle = self.currentRoom().getRiddle()
-
-            if riddle != None: 
-                riddle.activate()
-            """
             self.printGameState()
             print("")
             print("Type 'c' to show possible commands.")
@@ -227,8 +224,6 @@ class Game:
                         self.showCommands()
                         continue
 
-                    else:
-                        print("Invalid command.")
-                        continue
                 except:
-                    print("Not enough subcommands for the command '" + subCommands[0] + "'. Please type 'c' to view how the command works.")
+                    print("Invalid command.")
+                    continue

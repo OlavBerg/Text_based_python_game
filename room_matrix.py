@@ -1,34 +1,127 @@
 from room import Room
+from door import Door
+from coordinates import Coordinates
+from key import Key
+import help_functions
+import random
 
 class RoomMatrix:
-    def __init__(self, roomList: list[Room]):
-        numOfRows = max(room.getCoordinates()[0] for room in roomList) + 1
-        numOfColumns = max(room.getCoordinates()[1] for room in roomList) + 1
-
-        self.matrix = self.emptyMatrix(numOfRows, numOfColumns)
-
-        for room in roomList:
-            coordinates = room.getCoordinates()
-            xCoordinate = coordinates[0]
-            yCoordinate = coordinates[1]
-
-            self.matrix[xCoordinate][yCoordinate] = room
-            
-    def emptyMatrix(self, numOfRows: int, numOfColumns: int):
+    def __init__(self, numOfRows: int, numOfColumns: int):
         matrix = []
 
-        for i in range(numOfRows):
+        for x in range(numOfRows):
             row = []
 
-            for i in range(numOfColumns):
+            for y in range(numOfColumns):
                 row.append(None)
             
             matrix.append(row)
-        
-        return matrix
 
-    def getRoom(self, xCoordinate: int, yCoordinate: int):
-        #print(self.matrix[xCoordinate][yCoordinate])
-        return self.matrix[xCoordinate][yCoordinate]
+        self.numOfRows = numOfRows
+        self.numOfColumns = numOfColumns
+
+    def getNumOfRows(self):
+        return self.numOfRows
+
+    def getNumOfColumns(self):
+        return self.numOfColumns
+
+    def validCoordinates(self, coordinates: Coordinates):
+        
+        x = coordinates.getX()
+        y = coordinates.getY()
+
+        return x >= 0 and x <= self.numOfRows - 1 and y >= 0 and y <= self.numOfColumns - 1
+
+    def getRoom(self, coordinates: Coordinates):
+
+        if self.validCoordinates(Coordinates):
+            return self.matrix[coordinates.getX()][coordinates.getY()]
+        else:
+            return None
+
+    def placeRoom(self, room: Room, coordinates: Coordinates):
+        if self.validCoordinates(coordinates):
+            self.matrix[coordinates.getX()][coordinates.getY()] = room
+            return True
+        else:
+            return False
+
+    def fillWithEmptyRooms(self):
+        for x in range(self.numOfRows):
+            for y in range(self.numOfColumns):
+                self.placeRoom(Room(), Coordinates(x, y))
+
+    def makePath(self, currentCoordinates: Coordinates, currentPath: list[Coordinates], lockedDoorList: list[Door]):
+
+        if not(self.validCoordinates(currentCoordinates)) or currentCoordinates.inList(currentPath):
+            return False
+        
+        currentPath.append(currentCoordinates)
+        currentRoom = self.getRoom(currentCoordinates)
+
+        if not(currentRoom.isEmpty()) or currentCoordinates.isEqual(Coordinates(0, 0)):
+            return True
+
+        uncheckedDirections = ["n", "e", "s", "w"]
+
+        while len(uncheckedDirections) > 0:
+            directionToNextRoom = random.choice(uncheckedDirections)
+            nextCoordinates = currentCoordinates.getNext(directionToNextRoom)
+
+            if self.makePath(nextCoordinates, currentPath, lockedDoorList):
+                currentRoom.setDoor(directionToNextRoom, Door(False))
+
+                nextRoom = self.getRoom(nextCoordinates)
+                doorInNextRoom = None
+
+                if nextRoom.isEmpty():
+                    doorInNextRoom = Door(False)
+                else: 
+                    doorInNextRoom = Door(True)
+                    lockedDoorList.append(doorInNextRoom)
+
+                nextRoom.setDoor(help_functions.reverseDirection(directionToNextRoom), doorInNextRoom)
+                return True
+            else:
+                uncheckedDirections.remove(directionToNextRoom)
+    
+        currentPath.pop(-1)
+        return False
+
+
+    def randomize(self, colorPool: list[str], shapePool: list[str]):
+
+        self.fillWithEmptyRooms()
+        emptyCoordinatesList = help_functions.doubleRange(self.numOfRows, self.numOfColumns)
+        milestoneCoordinatesList = []
+        lockedDoorList = []
+
+        while len(emptyCoordinatesList) > 0:
+            milestoneCoordinates = random.choice(emptyCoordinatesList)
+            milestoneCoordinatesList.append(milestoneCoordinates)
+
+            currentPath = [milestoneCoordinates]
+            self.makePath(milestoneCoordinates, currentPath, lockedDoorList)
+            help_functions.listSubtraction(emptyCoordinatesList, currentPath)
+
+        availableColorShapePairs = help_functions.listOfPairs(colorPool, shapePool)
+
+        for i in range(len(lockedDoorList)):
+            colorShapePair = random.choice(availableColorShapePairs)
+            availableColorShapePairs.remove(colorShapePair)
+
+            color = colorShapePair[0]
+            shape = colorShapePair[1]
+
+            roomWithKey = self.getRoom(milestoneCoordinatesList[i])
+            roomWithKey.setKeyOnFloor(Key(color, shape))
+
+            lockedDoor = lockedDoorList[i]
+            lockedDoor.setColor(color)
+            lockedDoor.setShape(shape)
+
+        finnishRoom = milestoneCoordinatesList[-1]
+        finnishRoom.setToFinnish()
 
 

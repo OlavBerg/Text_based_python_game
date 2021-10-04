@@ -4,21 +4,30 @@ class Riddle:
         self.activate = activate
         self.correctAnswer = correctAnswer
 
-    def activate(Self):
+    def activate(self):
         print("Welcome")
         print("You are locked in this room...")
         print("To proceed to the next room you have to answer this question correct.")
-        
-    def correctAnswer(self):
-        self.correctAnswer
-        answer = input().lower()
-        while True:
+
+        tries = 0
+        while tries < 2:
+            answer = input().lower()
             if answer == self.correctAnswer:
                 print("Your answer is correct you may now proceed to the next room!")
+                True
                 break
-            else:
-                print("Your answer is wrong please try again...")
-                continue
+            elif answer != self.correctAnswer:
+                print("Your answer is incorrect try again.")
+                tries += 1
+        
+        if tries == 2:
+            print("You have answered incorrectly three times you will now be sent back.")
+            False
+        
+    def answer(self):
+        self.correctAnswer
+        
+        
 
 r1 = Riddle("What is the name of greatest videogame\n",
             "ever created\n",
