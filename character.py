@@ -2,7 +2,7 @@ from sword import Sword
 from shield import Shield
 
 class Character:
-    def __init__(self, strength: int = 1, equippedSword: Sword = None, 
+    def __init__(self, strength = 1, equippedSword: Sword = None, 
         equippedShield: Shield = None):
 
         self.strength = strength
