@@ -92,7 +92,7 @@ class Game:
         print("--------------------------------------------------------------------------------------------------------------------------------------------------------")
 
 
-        print("Current room: (" + str(self.currentCoordinates[0]) + ", " + str(self.currentCoordinates[1]) + ")")
+        print("Current room: (" + str(self.currentCoordinates.getX()) + ", " + str(self.currentCoordinates.getY) + ")")
 
         print("")
 

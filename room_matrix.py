@@ -7,7 +7,7 @@ import random
 
 class RoomMatrix:
     def __init__(self, numOfRows: int, numOfColumns: int):
-        matrix = []
+        self.matrix = []
 
         for x in range(numOfRows):
             row = []
@@ -15,7 +15,7 @@ class RoomMatrix:
             for y in range(numOfColumns):
                 row.append(None)
             
-            matrix.append(row)
+            self.matrix.append(row)
 
         self.numOfRows = numOfRows
         self.numOfColumns = numOfColumns
