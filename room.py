@@ -97,6 +97,7 @@ class Room:
 
     def setRiddle(self) :
         self.riddle = Riddle
+        print("hej")
 
 
     
