@@ -92,7 +92,7 @@ class Game:
         print("--------------------------------------------------------------------------------------------------------------------------------------------------------")
 
 
-        print("Current room: (" + str(self.currentCoordinates.getX()) + ", " + str(self.currentCoordinates.getY) + ")")
+        print("Current room: (" + str(self.currentCoordinates.getX()) + ", " + str(self.currentCoordinates.getY()) + ")")
 
         print("")
 
@@ -161,6 +161,12 @@ class Game:
 
         while isRunning:
             print("")
+
+            riddle = self.currentRoom().getRiddle()
+            
+            if riddle != None:
+                riddle.activate()
+
             self.printGameState()
             print("")
             print("Type 'c' to show possible commands.")

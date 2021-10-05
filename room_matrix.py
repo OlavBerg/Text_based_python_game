@@ -35,7 +35,7 @@ class RoomMatrix:
 
     def getRoom(self, coordinates: Coordinates):
 
-        if self.validCoordinates(Coordinates):
+        if self.validCoordinates(coordinates):
             return self.matrix[coordinates.getX()][coordinates.getY()]
         else:
             return None
