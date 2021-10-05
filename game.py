@@ -162,7 +162,13 @@ class Game:
             riddle = self.currentRoom().getRiddle()
             
             if riddle != None:
-                riddle.activate()
+                riddleSolved = riddle.activate()
+
+                if riddleSolved:
+                    pass
+                else:
+                    self.currentCoordinates = Coordinates(0, 0)
+
 
             self.printGameState()
             print("")
