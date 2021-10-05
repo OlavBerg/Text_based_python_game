@@ -23,9 +23,16 @@ class Game:
             print("The door is locked.")
             return False
         else:
-            self.currentCoordinates.update(direction)
-            print("You walk through the door.")
-            return True
+            nextCoordinates = self.currentCoordinates.getNext(direction)
+            nextRoom = self.roomMatrix.getRoom(nextCoordinates)
+
+            if nextRoom == None:
+                print("There is a solid wall behind the door.")
+                return False
+            else:
+                self.currentCoordinates = nextCoordinates
+                print("You walk through the door.")
+                return True
 
     def unlock(self, direction: str, key: Key):
         door = self.currentRoom().getDoor(direction)
