@@ -51,3 +51,6 @@ class Coordinates:
             self.y -= 1
         else:
             pass
+
+    def toString(self):
+        return "(" + str(self.x) + ", " + str(self.y) + ")"
