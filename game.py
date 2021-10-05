@@ -13,7 +13,7 @@ class Game:
 
     def move(self, direction: str):
         """If possible, moves the player to the next room in the given direction, which is either 'n', 'e', 's' or 'w'."""
-
+        
         door = self.currentRoom().getDoor(direction)
 
         if door == None:
@@ -23,17 +23,7 @@ class Game:
             print("The door is locked.")
             return False
         else:
-            if direction == "n":
-                self.currentCoordinates[0] -= 1
-            elif direction == "e":
-                self.currentCoordinates[1] += 1
-            elif direction == "s":
-                self.currentCoordinates[0] += 1
-            elif direction == "w":
-                self.currentCoordinates[1] -= 1
-            else:
-                print("Error: Invalid direction.")
-
+            self.currentCoordinates.update(direction)
             print("You walk through the door.")
             return True
 
@@ -185,7 +175,7 @@ class Game:
                             continue
 
                         direction = direction[0]
-
+                        
                         if self.move(direction):
                             break
                         else:
