@@ -176,60 +176,62 @@ class Game:
                 playerCommand = input("Command: ").lower()
                 subCommands = playerCommand.split(" ")
 
-                try:
-                    if subCommands[0] == "move":
-                        direction = subCommands[1]
+                
+                if subCommands[0] == "move":
+                    direction = subCommands[1]
 
-                        if not direction in ["north", "east", "south", "west"]:
-                            print("Invalid direction.")
-                            continue
-
-                        direction = direction[0]
-
-                        if self.move(direction):
-                            break
-                        else:
-                            continue
-
-                    elif subCommands[0] == "pick":
-                        keyColor = subCommands[1]
-                        keyShape = subCommands[2]
-
-                        if self.pickKey(keyColor, keyShape):
-                            break
-                        else:
-                            continue
-
-                    elif subCommands[0] == "unlock":
-                        direction = subCommands[1]
-                        keyColor = subCommands[2]
-                        keyShape = subCommands[3]
-                        key = self.getKeyFromInventory(keyColor, keyShape)
-
-                        if not direction in ["north", "east", "south", "west"]:
-                            print("Invalid direction.")
-                            continue
-
-                        if key == None:
-                            print("You don't have such a key.")
-                            continue
-
-                        direction = direction[0]
-
-                        if self.unlock(direction, key):
-                            break
-                        else:
-                            continue
-
-                    elif subCommands[0] == "quit":
-                        isRunning = False
-                        print("Quitting the game.")
-                        break
-
-                    elif subCommands[0] == "c":
-                        self.showCommands()
+                    if not direction in ["north", "east", "south", "west"]:
+                        print("Invalid direction.")
                         continue
 
-                except:
+                    direction = direction[0]
+
+                    if self.move(direction):
+                        break
+                    else:
+                        continue
+
+                elif subCommands[0] == "pick":
+                    keyColor = subCommands[1]
+                    keyShape = subCommands[2]
+
+                    if self.pickKey(keyColor, keyShape):
+                        break
+                    else:
+                        continue
+
+                elif subCommands[0] == "unlock":
+                    direction = subCommands[1]
+                    keyColor = subCommands[2]
+                    keyShape = subCommands[3]
+                    key = self.getKeyFromInventory(keyColor, keyShape)
+
+                    if not direction in ["north", "east", "south", "west"]:
+                        print("Invalid direction.")
+                        continue
+
+                    if key == None:
+                        print("You don't have such a key.")
+                        continue
+
+                    direction = direction[0]
+
+                    if self.unlock(direction, key):
+                        break
+                    else:
+                        continue
+
+                elif subCommands[0] == "quit":
+                    isRunning = False
+                    print("Quitting the game.")
+                    break
+
+                elif subCommands[0] == "c":
+                    self.showCommands()
+                    continue
+                else:
                     print("Invalid command.")
                     continue
+
+                
+                    
