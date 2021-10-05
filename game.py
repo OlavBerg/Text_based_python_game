@@ -40,7 +40,7 @@ class Game:
 
         elif door.unlock(key):
             print("You unlock the door.")
-            self.keysInInventory.remove(key)
+            self.inventory.remove(key)
             return True
 
         else:
@@ -135,9 +135,9 @@ class Game:
 
     def getKeyFromInventory(self, color: str, shape: str):
         selectedKey = None
-
+        
         for key in self.getInventoryItemsOfType(Key):
-            if key.getColor() == color & key.getShape() == shape:
+            if key.getColor() == color and key.getShape() == shape:
                 selectedKey = key
                 break
         
@@ -195,7 +195,7 @@ class Game:
                         keyColor = subCommands[2]
                         keyShape = subCommands[3]
                         key = self.getKeyFromInventory(keyColor, keyShape)
-
+                        
                         if not direction in ["north", "east", "south", "west"]:
                             print("Invalid direction.")
                             continue
