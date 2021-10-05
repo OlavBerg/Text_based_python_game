@@ -1,10 +1,14 @@
+import collections
 from door import Door
 from key import Key
 from collections import deque
 from riddle import Riddle
+from lamp import Lamp
+from button import Button
+
 
 class Room:
-    def __init__(self, listOfDoor: list[Door] = None, keysOnFloor: list[Key] = None, riddle: Riddle = None):
+    def __init__(self, listOfDoor: list[Door] = None, keysOnFloor: list[Key] = None, riddle: Riddle = None, lamp: Lamp = None, button: Button = None):
         if listOfDoor == None:
             self.listOfDoor = [None, None, None, None]
         else:
@@ -18,6 +22,10 @@ class Room:
         self.finnish = False #True if the room is the finnish room. False otherwise.
 
         self.riddle = riddle
+
+        self.lamp = lamp
+        
+        self.button = button
 
         
 
@@ -77,11 +85,12 @@ class Room:
 
     def rotateRoom(self, direction: str):
         """Rotates the room in the given direction. 'direction' is either 'c' (clockwise) or 'a' (anticlockwise)."""
-        self.getDoor = deque([0, 1, 2, 3])
-        self.getDoor.rotate()
-        print(self.getDoor)
-        return self.listOfDoor
-
+        self.direction = collections.deque(self.listOfDoor)
+        print("list before rotate")
+        self.getDoor.rotate(self.listOfDoor)
+        print("list after rotate")
+        return self.getDoor()
+        
 
     def isFinnish(self):
         """Returns True if the room is a finnish room. Returns False otherwise."""
@@ -97,7 +106,30 @@ class Room:
 
     def setRiddle(self, riddle: Riddle) :
         self.riddle = riddle
-        print("hej")
+        
+    def removeRiddle(self, riddle: Riddle) :
+        self.riddle = riddle
+        self.riddle = None
+
+    def getLamp(self, lamp: Lamp):
+        return self.lamp
+
+    def getButton(self, button: Button):
+        return self.button
+
+    def setLamp(self, lamp: Lamp):
+        self.lamp = lamp
+
+    def setButton(self, button: Button):
+        self.button = button 
+
+  
+
+
+
+        
+
+        
 
 
     
