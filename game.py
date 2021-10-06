@@ -1,3 +1,4 @@
+from flashlight import Flashlight
 from key import Key
 from room_matrix import RoomMatrix
 from coordinates import Coordinates
@@ -11,6 +12,16 @@ class Game:
     def currentRoom(self):
         return self.roomMatrix.getRoom(self.currentCoordinates)
 
+    def getFlashlight(self):
+        flashlight = None
+
+        for item in self.inventory:
+            if isinstance(item, Flashlight):
+                flashlight = item
+                break
+
+        return flashlight
+
     def move(self, direction: str):
         """If possible, moves the player to the next room in the given direction, which is either 'n', 'e', 's' or 'w'."""
         
@@ -22,17 +33,26 @@ class Game:
         elif door.isLocked():
             print("The door is locked.")
             return False
-        else:
-            nextCoordinates = self.currentCoordinates.getNext(direction)
-            nextRoom = self.roomMatrix.getRoom(nextCoordinates)
+    
+        nextCoordinates = self.currentCoordinates.getNext(direction)
+        nextRoom = self.roomMatrix.getRoom(nextCoordinates)
 
-            if nextRoom == None:
-                print("There is a solid wall behind the door.")
+        if nextRoom == None:
+            print("There is a solid wall behind the door.")
+            return False
+        elif not nextRoom.containsLamp():
+            flashlight = self.getFlashlight()
+
+            if flashlight == None:
+                print("The room has no lights. You need a flashlight to enter this room.")
                 return False
-            else:
-                self.currentCoordinates = nextCoordinates
-                print("You walk through the door.")
-                return True
+            elif not flashlight.getTurnOn():
+                print("The room has no lights. You need to turn on your flashlight to enter this room.")
+                return False
+
+        self.currentCoordinates = nextCoordinates
+        print("You walk through the door.")
+        return True
 
     def unlock(self, direction: str, key: Key):
         door = self.currentRoom().getDoor(direction)
