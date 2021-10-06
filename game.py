@@ -228,6 +228,11 @@ class Game:
         while isRunning:
             print("")
 
+            if self.currentRoom().isFinnish():
+                print("Congratulations! You reached the finnish room!")
+                isRunning = False
+                break
+
             riddle = self.currentRoom().getRiddle()
             
             if riddle != None:
