@@ -40,9 +40,3 @@ class Inventory:
                 break
 
         return flashlight
-
-
-
-#print("• " + color.capitalize() + " " + shape.lower())
-
-    

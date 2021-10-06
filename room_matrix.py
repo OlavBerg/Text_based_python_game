@@ -1,9 +1,9 @@
 from room import Room
-from door import Door
+#from door import Door
 from coordinates import Coordinates
-from key import Key
-import help_functions
-import random
+#from key import Key
+#import help_functions
+#import random
 
 class RoomMatrix:
     def __init__(self, numOfRows: int, numOfColumns: int):
@@ -51,7 +51,7 @@ class RoomMatrix:
         for x in range(self.numOfRows):
             for y in range(self.numOfColumns):
                 self.placeRoom(Room(), Coordinates(x, y))
-
+    """
     def makePath(self, currentCoordinates: Coordinates, currentPath: list[Coordinates], lockedDoorList: list[Door]):
 
         if not(self.validCoordinates(currentCoordinates)) or currentCoordinates.inList(currentPath):
@@ -123,5 +123,5 @@ class RoomMatrix:
 
         finnishRoom = milestoneCoordinatesList[-1]
         finnishRoom.setToFinnish()
-
+    """
 
