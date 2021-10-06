@@ -1,19 +1,32 @@
+from item import Item
+from flashlight import Flashlight
 from key import Key
 from room_matrix import RoomMatrix
 from coordinates import Coordinates
+from inventory import Inventory
 
 class Game:
     def __init__(self, roomMatrix: RoomMatrix):
         self.roomMatrix = roomMatrix
         self.currentCoordinates = Coordinates(0, 0)
-        self.inventory = []
+        self.inventory = Inventory()
 
     def currentRoom(self):
         return self.roomMatrix.getRoom(self.currentCoordinates)
+    
+    def move(self, subCommandList: list[str]):
 
-    def move(self, direction: str):
-        """If possible, moves the player to the next room in the given direction, which is either 'n', 'e', 's' or 'w'."""
-        
+        if len(subCommandList) < 2:
+            print("Please type the direction you want to move.")
+            return False
+
+        direction = subCommandList[1]
+
+        if not direction in ["north", "east", "south", "west"]:
+            print("Invalid direction.")
+            return False
+
+        direction = direction[0]
         door = self.currentRoom().getDoor(direction)
 
         if door == None:
@@ -22,19 +35,48 @@ class Game:
         elif door.isLocked():
             print("The door is locked.")
             return False
-        else:
-            nextCoordinates = self.currentCoordinates.getNext(direction)
-            nextRoom = self.roomMatrix.getRoom(nextCoordinates)
 
-            if nextRoom == None:
-                print("There is a solid wall behind the door.")
+        nextCoordinates = self.currentCoordinates.getNext(direction)
+        nextRoom = self.roomMatrix.getRoom(nextCoordinates)
+
+        if nextRoom == None:
+            print("There is a solid wall behind the door.")
+            return False
+        elif not nextRoom.containsLamp():
+            flashlight = self.inventory.getFlashlight()
+
+            if flashlight == None:
+                print("The room has no lights. You need a flashlight to enter this room.")
                 return False
-            else:
-                self.currentCoordinates = nextCoordinates
-                print("You walk through the door.")
-                return True
+            elif not flashlight.getTurnOn():
+                print("The room has no lights. You need to turn on your flashlight to enter this room.")
+                return False
 
-    def unlock(self, direction: str, key: Key):
+        self.currentCoordinates = nextCoordinates
+        print("You walk through the door.")
+        return True
+
+    def unlock(self, subCommandList: list[str]):
+
+        if len(subCommandList) < 4:
+            print("Please include the direction of the door you want to unlock and the color and shape of the key you want to use.")
+            return False
+
+        direction = subCommandList[1]
+
+        if not direction in ["north", "east", "south", "west"]:
+            print("Invalid direction.")
+            return False
+
+        keyColor = subCommandList[2]
+        keyShape = subCommandList[3]
+        key = self.inventory.getKey(keyColor, keyShape)
+
+        if key == None:
+            print("You don't have such a key.")
+            return False
+
+        direction = direction[0]
         door = self.currentRoom().getDoor(direction)
 
         if door == None:
@@ -45,31 +87,76 @@ class Game:
             print("The door is already open.")
             return False
 
-        elif door.unlock(key):
-            print("You unlock the door.")
-            self.inventory.remove(key)
-            return True
-
-        else:
+        elif not door.unlock(key):
             print("The key doesn't match.")
             return False
 
-    def pickKey(self, color: str, shape: str):
-        pickedUpKey = None
+        print("You unlock the door.")
+        self.inventory.remove(key)
+        return True
 
-        for key in self.currentRoom().getKeysOnFloor():
-            if key.getColor() == color and key.getShape() == shape:
-                pickedUpKey = key
-                break
+    def getItemsOfType(self, itemType: type, itemList: list[Item]):
+        listOfItemsOfType = []
 
-        if pickedUpKey == None:
-            print("There is no such key on the floor.")
+        for item in itemList:
+            if isinstance(item, itemType):
+                listOfItemsOfType.append(item)
+
+        return listOfItemsOfType
+
+    def pick(self, subCommands: list[str]):
+
+        if len(subCommands) < 2:
+            print("Please include the name of the item you want to pick up.")
             return False
-        else:
-            self.inventory.append(pickedUpKey)
-            self.currentRoom().removeKey(key)
-            print("You pick up the " + color + " " + shape + " key.")
-            return True
+
+        itemType = subCommands[-1]
+        itemsOnFloor = self.currentRoom().getItemsOnFloor()
+
+        pickedUpItem = None
+
+        if itemType == "key":
+
+            if len(subCommands) < 4:
+                print("Please include the color and shape of the key you want to pick up.")
+                return False
+
+            color = subCommands[1]
+            shape = subCommands[2]
+
+            pickedUpKey = None
+
+            for key in self.getItemsOfType(Key, itemsOnFloor):
+                if key.getColor() == color and key.getShape() == shape:
+                    pickedUpKey = key
+                    break
+
+            if pickedUpKey == None:
+                print("There is no such key on the floor.")
+                return False
+
+            pickedUpItem = pickedUpKey
+        
+        elif itemType == "flashlight":
+            try:
+                pickedUpItem = self.getItemsOfType(Flashlight, itemsOnFloor)[0]
+            except:
+                print("There is no flashlight on the floor.")
+                return False
+
+        if pickedUpItem == None:
+            print("There is no such item on the floor.")
+            return False
+
+        self.inventory.append(pickedUpItem)
+        self.currentRoom().removeItem(pickedUpItem)
+
+        subCommands.pop(0)
+        itemName = " ".join(subCommands)
+
+        print("You pick up the " + itemName + ".")
+        return True
+
 
     def directionInfo(self, direction: str):
         door = self.currentRoom().getDoor(direction)
@@ -83,6 +170,17 @@ class Game:
             return "Locked door (" + color.capitalize() + " " + shape.lower() + ")"
         else:
             return "Open door"
+
+    def printItemList(self, itemList: list[Item]):
+        for item in itemList:
+            if isinstance(item, Key):
+                key = item
+                color = key.getColor()
+                shape = key.getShape()
+                print("• " + color.capitalize() + " " + shape.lower() + " key")
+            elif isinstance(item, Flashlight):
+                print("• Flashlight")
+
 
     def printGameState(self):
         """Prints the state if the game. Includes the current room, the doors in the room and the keys on the floor."""
@@ -100,25 +198,15 @@ class Game:
 
         print("")
 
-        print("Keys on the floor")
-        print("-----------------")
-
-        for key in self.currentRoom().getKeysOnFloor():
-            color = key.getColor()
-            shape = key.getShape()
-            
-            print("• " + color.capitalize() + " " + shape.lower())
+        print("Items on the floor")
+        print("------------------")
+        self.printItemList(self.currentRoom().getItemsOnFloor())
 
         print("")
 
-        print("Keys in your inventory")
-        print("----------------------")
-
-        for key in self.inventory:
-            color = key.getColor()
-            shape = key.getShape()
-            
-            print("• " + color.capitalize() + " " + shape.lower())
+        print("Inventory")
+        print("---------")
+        self.printItemList(self.inventory.getItems())
 
     def showCommands(self):
         print("")
@@ -130,25 +218,6 @@ class Game:
         print("• quit                                                                Quit the game.")
         print("• c                                                                   Show possible commands.")
         print("")
-
-    def getInventoryItemsOfType(self, itemType: type):
-        itemList = []
-
-        for item in self.inventory:
-            if isinstance(item, itemType):
-                itemList.append(item)
-
-        return itemList
-
-    def getKeyFromInventory(self, color: str, shape: str):
-        selectedKey = None
-        
-        for key in self.getInventoryItemsOfType(Key):
-            if key.getColor() == color and key.getShape() == shape:
-                selectedKey = key
-                break
-        
-        return selectedKey
 
     def run(self):
         """Runs the game."""
@@ -177,67 +246,38 @@ class Game:
 
             while True:
                 playerCommand = input("Command: ").lower()
-                subCommands = playerCommand.split(" ")
+                subCommandList = playerCommand.split(" ")
 
-                try:
-                    if subCommands[0] == "move":
-                        direction = subCommands[1]
-
-                        if not direction in ["north", "east", "south", "west"]:
-                            print("Invalid direction.")
-                            continue
-
-                        direction = direction[0]
-                        
-                        if self.move(direction):
-                            break
-                        else:
-                            continue
-
-                    elif subCommands[0] == "pick":
-                        keyColor = subCommands[1]
-                        keyShape = subCommands[2]
-
-                        if self.pickKey(keyColor, keyShape):
-                            break
-                        else:
-                            continue
-
-                    elif subCommands[0] == "unlock":
-                        direction = subCommands[1]
-                        keyColor = subCommands[2]
-                        keyShape = subCommands[3]
-                        key = self.getKeyFromInventory(keyColor, keyShape)
-                        
-                        if not direction in ["north", "east", "south", "west"]:
-                            print("Invalid direction.")
-                            continue
-
-                        if key == None:
-                            print("You don't have such a key.")
-                            continue
-
-                        direction = direction[0]
-
-                        if self.unlock(direction, key):
-                            break
-                        else:
-                            continue
-
-                    elif subCommands[0] == "quit":
-                        isRunning = False
-                        print("Quitting the game.")
+                if subCommandList[0] == "move":
+                    if self.move(subCommandList):
                         break
-
-                    elif subCommands[0] == "c":
-                        self.showCommands()
-                        continue
                     else:
-                        print("Invalid command. Please type 'c' for a list of possible commands.")
                         continue
 
-                except:
-                    print("Not enough sub-commands for the command '" + subCommands[0] + "'. Please type 'c' for how to use the command.")
+                elif subCommandList[0] == "pick":
+                    if self.pick(subCommandList):
+                        break
+                    else:
+                        continue
+
+                elif subCommandList[0] == "unlock":
+                    if self.unlock(subCommandList):
+                        break
+                    else:
+                        continue
+
+                elif subCommandList[0] == "quit":
+                    isRunning = False
+                    print("Quitting the game.")
+                    break
+
+                elif subCommandList[0] == "c":
+                    self.showCommands()
+                    continue
+
+                else:
+                    print("Invalid command. Please type 'c' for a list of possible commands.")
+                    continue
 
                 
                     

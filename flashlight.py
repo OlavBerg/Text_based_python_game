@@ -1,7 +1,7 @@
 from item import Item
 
 class Flashlight(Item) :
-    def __init__(self, turnOn: False):
+    def __init__(self, turnOn: bool = False):
         super().__init__()
         self.turnOn = turnOn
 
