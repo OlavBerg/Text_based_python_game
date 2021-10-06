@@ -1,23 +1,25 @@
 import collections
 from door import Door
-from key import Key
 from collections import deque
 from riddle import Riddle
 from lamp import Lamp
 from button import Button
+from item import Item
+from key import Key
+from flashlight import Flashlight
 
 
 class Room:
-    def __init__(self, listOfDoor: list[Door] = None, keysOnFloor: list[Key] = None, riddle: Riddle = None, lamp: Lamp = None, button: Button = None):
+    def __init__(self, listOfDoor: list[Door] = None, itemsOnFloor: list[Item] = None, riddle: Riddle = None, lamp: Lamp = None, button: Button = None):
         if listOfDoor == None:
             self.listOfDoor = [None, None, None, None]
         else:
             self.listOfDoor = listOfDoor
 
-        if keysOnFloor == None:
-            self.keysOnFloor = []
+        if itemsOnFloor == None:
+            self.itemsOnFloor = []
         else:
-            self.keysOnFloor = keysOnFloor
+            self.itemsOnFloor = itemsOnFloor
 
         self.finnish = False #True if the room is the finnish room. False otherwise.
 
@@ -47,9 +49,9 @@ class Room:
             self.listOfDoor[3] = door 
         
 
-    def removeKey(self, key: Key):
-      self.keysOnFloor.remove(key)
-      return self.keysOnFloor
+    def removeItem(self, item: Item):
+      self.itemsOnFloor.remove(item)
+      return self.itemsOnFloor
 
     def getDoor(self, direction: str):
         if direction == "n" :
@@ -71,11 +73,11 @@ class Room:
         """Returns the door in the given direction, which is either 'n', 'e', 's' or 'w'."""
         return direction 
 
-    def getKeysOnFloor(self):
-        return self.keysOnFloor
+    def getItemsOnFloor(self):
+        return self.itemsOnFloor
 
-    def placeKeyOnFloor(self, key: Key) :
-        self.keysOnFloor.append(key)
+    def placeItemOnFloor(self, item: Item) :
+        self.itemsOnFloor.append(item)
 
     """ def rotateRoom(self, direction: str):
         Rotates the room in the given direction. 'direction' is either 'c' (clockwise) or 'a' (anticlockwise).
@@ -91,8 +93,8 @@ class Room:
         self.finnish = True
 
     def isEmpty(self):
-        """Returns True if the room contains no doors and no keys. Returns False otherwise."""
-        if self.listOfDoor == None and self.keysOnFloor == None and self.finnish == False:
+        """Returns True if the room contains no doors and no items. Returns False otherwise."""
+        if self.listOfDoor == None and self.itemsOnFloor == None and self.finnish == False:
             return True
 
     def getRiddle(self) :

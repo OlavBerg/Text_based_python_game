@@ -15,15 +15,6 @@ class Inventory:
         except:
             pass
 
-    def getItemsOfType(self, itemType: type):
-        listOfItemsOfType = []
-
-        for item in self.itemList:
-            if isinstance(item, itemType):
-                listOfItemsOfType.append(item)
-
-        return listOfItemsOfType
-
     def getKey(self, color: str, shape: str):
         retrievedKey = None
 
@@ -43,16 +34,6 @@ class Inventory:
                 break
 
         return flashlight
-
-    def print(self):
-        for item in self.itemList:
-            if isinstance(item, Key):
-                key = item
-                color = key.getColor()
-                shape = key.getShape()
-                print("• " + color.capitalize() + " " + shape.lower() + " key")
-            elif isinstance(item, Flashlight):
-                print("• Flashlight")
 
 
 
