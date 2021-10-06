@@ -6,7 +6,6 @@ from key import Key
 from room_matrix import RoomMatrix
 from coordinates import Coordinates
 from inventory import Inventory
-from riddle import Riddle
 
 class Game:
     def __init__(self, roomMatrix: RoomMatrix):
@@ -55,9 +54,6 @@ class Game:
             if flashlight == None:
                 print("The room has no lights. You need a flashlight to enter this room.")
                 return False
-            #elif not flashlight.getTurnOn():
-                #print("The room has no lights. You need to turn on your flashlight to enter this room.")
-                #return False
 
         self.currentCoordinates = nextCoordinates
         print("You walk through the door.")
@@ -192,7 +188,6 @@ class Game:
             elif isinstance(item, Flashlight):
                 print("• Flashlight")
 
-
     def printGameState(self):
         """Prints the state if the game. Includes the current room, the doors in the room and the items on the floor."""
         print("--------------------------------------------------------------------------------------------------------------------------------------------------------")
@@ -299,6 +294,3 @@ class Game:
             self.printGameState()
             print("")
             self.enterCommand()
-
-                
-                    

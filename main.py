@@ -159,7 +159,6 @@ r6 = Riddle("I have keys but no locks, and space and no rooms\n"
             "you can enter but you can't go outside, what am i?"
             "This riddle has a one word answer", correctAnswer = 'keyboard', timesToTry = 30)
 
-
 roomMatrix.getRoom(Coordinates(0, 2)).setRiddle(r1)
 roomMatrix.getRoom(Coordinates(2, 3)).setRiddle(r2)
 roomMatrix.getRoom(Coordinates(4, 0)).setRiddle(r3)
@@ -185,12 +184,13 @@ roomMatrix.getRoom(Coordinates(2, 0)).lamp = None
 roomMatrix.getRoom(Coordinates(4, 1)).lamp = None
 roomMatrix.getRoom(Coordinates(1, 0)).lamp = None
 
+# Set finnish room
+roomMatrix.getRoom(Coordinates(1, 3)).setToFinnish()
+
+
+
 
 game = Game(roomMatrix)
-
 game.run()
-
-
-print("Sucess")
 
 print("")
