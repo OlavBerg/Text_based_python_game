@@ -39,3 +39,18 @@ class Coordinates:
             return Coordinates(self.x, self.y - 1)
         else:
             return None
+
+    def update(self, direction: str):
+        if direction == "n":
+            self.x -= 1
+        elif direction == "e":
+            self.y += 1
+        elif direction == "s":
+            self.x += 1
+        elif direction == "w":
+            self.y -= 1
+        else:
+            pass
+
+    def toString(self):
+        return "(" + str(self.x) + ", " + str(self.y) + ")"

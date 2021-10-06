@@ -1,8 +1,10 @@
 from door import Door
 from key import Key
+from collections import deque
+from riddle import Riddle
 
 class Room:
-    def __init__(self, listOfDoor: list[Door] = None, keysOnFloor: list[Key] = None):
+    def __init__(self, listOfDoor: list[Door] = None, keysOnFloor: list[Key] = None, riddle: Riddle = None):
         if listOfDoor == None:
             self.listOfDoor = [None, None, None, None]
         else:
@@ -14,6 +16,10 @@ class Room:
             self.keysOnFloor = keysOnFloor
 
         self.finnish = False #True if the room is the finnish room. False otherwise.
+
+        self.riddle = riddle
+
+        
 
 
     def setDoor(self, direction: str, door: Door):
@@ -65,20 +71,31 @@ class Room:
     def placeKeyOnFloor(self, key: Key) :
         self.keysOnFloor.append(key)
 
-    def rotate(self, direction: str):
+    def rotateRoom(self, direction: str):
         """Rotates the room in the given direction. 'direction' is either 'c' (clockwise) or 'a' (anticlockwise)."""
-        pass
+        self.getDoor = deque([0, 1, 2, 3])
+        self.getDoor.rotate()
+        print(self.getDoor)
+        return self.listOfDoor
+
 
     def isFinnish(self):
         """Returns True if the room is a finnish room. Returns False otherwise."""
-        pass
+        self.finnish = True
 
     def isEmpty(self):
         """Returns True if the room contains no doors and no keys. Returns False otherwise."""
-        pass
+        if self.listOfDoor == None and self.keysOnFloor == None and self.finnish == False:
+            return True
+
+    def getRiddle(self) :
+        return self.riddle
+
+    def setRiddle(self, riddle: Riddle) :
+        self.riddle = riddle
 
 
-        
+    
             
 
 

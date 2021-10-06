@@ -13,7 +13,7 @@ class Game:
 
     def move(self, direction: str):
         """If possible, moves the player to the next room in the given direction, which is either 'n', 'e', 's' or 'w'."""
-
+        
         door = self.currentRoom().getDoor(direction)
 
         if door == None:
@@ -23,19 +23,16 @@ class Game:
             print("The door is locked.")
             return False
         else:
-            if direction == "n":
-                self.currentCoordinates[0] -= 1
-            elif direction == "e":
-                self.currentCoordinates[1] += 1
-            elif direction == "s":
-                self.currentCoordinates[0] += 1
-            elif direction == "w":
-                self.currentCoordinates[1] -= 1
-            else:
-                print("Error: Invalid direction.")
+            nextCoordinates = self.currentCoordinates.getNext(direction)
+            nextRoom = self.roomMatrix.getRoom(nextCoordinates)
 
-            print("You walk through the door.")
-            return True
+            if nextRoom == None:
+                print("There is a solid wall behind the door.")
+                return False
+            else:
+                self.currentCoordinates = nextCoordinates
+                print("You walk through the door.")
+                return True
 
     def unlock(self, direction: str, key: Key):
         door = self.currentRoom().getDoor(direction)
@@ -50,7 +47,7 @@ class Game:
 
         elif door.unlock(key):
             print("You unlock the door.")
-            self.keysInInventory.remove(key)
+            self.inventory.remove(key)
             return True
 
         else:
@@ -92,7 +89,7 @@ class Game:
         print("--------------------------------------------------------------------------------------------------------------------------------------------------------")
 
 
-        print("Current room: (" + str(self.currentCoordinates[0]) + ", " + str(self.currentCoordinates[1]) + ")")
+        print("Current room: " + self.currentCoordinates.toString())
 
         print("")
 
@@ -145,9 +142,9 @@ class Game:
 
     def getKeyFromInventory(self, color: str, shape: str):
         selectedKey = None
-
+        
         for key in self.getInventoryItemsOfType(Key):
-            if key.getColor() == color & key.getShape() == shape:
+            if key.getColor() == color and key.getShape() == shape:
                 selectedKey = key
                 break
         
@@ -161,6 +158,18 @@ class Game:
 
         while isRunning:
             print("")
+
+            riddle = self.currentRoom().getRiddle()
+            
+            if riddle != None:
+                riddleSolved = riddle.activate()
+
+                if riddleSolved:
+                    pass
+                else:
+                    self.currentCoordinates = Coordinates(0, 0)
+
+
             self.printGameState()
             print("")
             print("Type 'c' to show possible commands.")
@@ -179,7 +188,7 @@ class Game:
                             continue
 
                         direction = direction[0]
-
+                        
                         if self.move(direction):
                             break
                         else:
@@ -199,7 +208,7 @@ class Game:
                         keyColor = subCommands[2]
                         keyShape = subCommands[3]
                         key = self.getKeyFromInventory(keyColor, keyShape)
-
+                        
                         if not direction in ["north", "east", "south", "west"]:
                             print("Invalid direction.")
                             continue
@@ -223,7 +232,12 @@ class Game:
                     elif subCommands[0] == "c":
                         self.showCommands()
                         continue
+                    else:
+                        print("Invalid command. Please type 'c' for a list of possible commands.")
+                        continue
 
                 except:
-                    print("Invalid command.")
-                    continue
+                    print("Not enough sub-commands for the command '" + subCommands[0] + "'. Please type 'c' for how to use the command.")
+
+                
+                    
