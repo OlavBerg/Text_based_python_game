@@ -1,3 +1,5 @@
+# Developed by Olav Berg
+
 from room import Room
 #from door import Door
 from coordinates import Coordinates
@@ -6,8 +8,10 @@ from coordinates import Coordinates
 #import random
 
 class RoomMatrix:
+    """A 2-dimensional array of rooms."""
+
     def __init__(self, numOfRows: int, numOfColumns: int):
-        self.matrix = []
+        self.matrix = [] # A double list countaining rooms.
 
         for x in range(numOfRows):
             row = []

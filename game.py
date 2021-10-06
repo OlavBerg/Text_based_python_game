@@ -1,3 +1,5 @@
+# Developed by Olav Berg
+
 from item import Item
 from flashlight import Flashlight
 from key import Key
@@ -25,14 +27,14 @@ class Game:
             print("Please type the direction you want to move.")
             return False
 
-        direction = subCommandList[1]
+        direction = subCommandList[1] # The direction you want to move.
 
         if not self.validDirection(direction):
             print("Invalid direction.")
             return False
 
         direction = direction[0]
-        door = self.currentRoom().getDoor(direction)
+        door = self.currentRoom().getDoor(direction) # The door you want to move through.
 
         if door == None:
             print("There is no door in that direction.")
@@ -53,9 +55,9 @@ class Game:
             if flashlight == None:
                 print("The room has no lights. You need a flashlight to enter this room.")
                 return False
-            elif not flashlight.getTurnOn():
-                print("The room has no lights. You need to turn on your flashlight to enter this room.")
-                return False
+            #elif not flashlight.getTurnOn():
+                #print("The room has no lights. You need to turn on your flashlight to enter this room.")
+                #return False
 
         self.currentCoordinates = nextCoordinates
         print("You walk through the door.")
@@ -67,7 +69,7 @@ class Game:
             print("Please include the direction of the door you want to unlock and the color and shape of the key you want to use.")
             return False
 
-        direction = subCommandList[1]
+        direction = subCommandList[1] # The direction of the door you want to unlock.
 
         if not self.validDirection(direction):
             print("Invalid direction.")
@@ -82,7 +84,7 @@ class Game:
             return False
 
         direction = direction[0]
-        door = self.currentRoom().getDoor(direction)
+        door = self.currentRoom().getDoor(direction) # The door you want to unlock.
 
         if door == None:
             print("There is no door in that direction.")
@@ -101,6 +103,8 @@ class Game:
         return True
 
     def getItemsOfType(self, itemType: type, itemList: list[Item]):
+        """Given a list of items and an item type (key/flashlight), the function returns a list of all of the items of the given list that are the given type."""
+
         listOfItemsOfType = []
 
         for item in itemList:
@@ -162,8 +166,9 @@ class Game:
         print("You pick up the " + itemName + ".")
         return True
 
-
     def directionInfo(self, direction: str):
+        """Returns a string describing what exists in the given direction (a wall, a door etc.)."""
+
         door = self.currentRoom().getDoor(direction)
 
         if door == None:
@@ -225,6 +230,8 @@ class Game:
         print("")
 
     def checkForRiddle(self):
+        """Checks if there is a riddle in the current room. If there is, the riddle activates."""
+
         riddle = self.currentRoom().getRiddle()
             
         if riddle != None:
@@ -233,7 +240,7 @@ class Game:
             if riddleSolved:
                 self.currentRoom().removeRiddle()
             else:
-                self.currentCoordinates = Coordinates(0, 0)
+                self.currentCoordinates = Coordinates(0, 0) # Teleport back to the start if you give an incorrect answer enough times.
 
     def start(self):
         print("Welcome to the game!")
@@ -244,6 +251,8 @@ class Game:
         self.isRunning = False
 
     def enterCommand(self):
+        """Asks the player to input a command, then executes it."""
+
         print("Type 'c' to show possible commands.")
         print("")
 
@@ -282,7 +291,7 @@ class Game:
 
             if self.currentRoom().isFinnish():
                 print("Congratulations! You reached the finnish room!")
-                isRunning = False
+                self.isRunning = False
                 break
 
             self.checkForRiddle()

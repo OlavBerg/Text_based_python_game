@@ -1,3 +1,5 @@
+# Developed by Olav Berg
+
 class Coordinates:
     def __init__(self, x: int, y: int):
         self.x = x
@@ -28,6 +30,7 @@ class Coordinates:
                 break
 
     def getNext(self, direction: str):
+        "Returns the next coordinates in the given direction ('n', 'e', 's' or 'w')."
 
         if direction == "n":
             return Coordinates(self.x - 1, self.y)
@@ -41,6 +44,8 @@ class Coordinates:
             return None
 
     def update(self, direction: str):
+        """Changes the coordinates one step in the given direction ('n', 'e', 's' or 'w')."""
+
         if direction == "n":
             self.x -= 1
         elif direction == "e":

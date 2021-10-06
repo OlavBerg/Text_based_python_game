@@ -1,3 +1,5 @@
+# Developed by Olav Berg
+
 from item import Item
 from key import Key
 from flashlight import Flashlight
