@@ -54,19 +54,15 @@ class Room:
 
     def getDoor(self, direction: str):
         if direction == "n" :
-            print("north")
             return self.listOfDoor[0]
 
         elif direction == "e" :
-            print("east")
             return self.listOfDoor[1]
 
         elif direction == "s" :
-            print("south")
             return self.listOfDoor[2]
 
         elif direction == "w" :
-            print("west")
             return self.listOfDoor[3]
 
 
@@ -107,6 +103,7 @@ class Room:
     def setRiddle(self, riddle: Riddle) :
         self.riddle = riddle
         
+
     def removeRiddle(self, riddle: Riddle) :
         self.riddle = riddle
         self.riddle = None
@@ -122,7 +119,6 @@ class Room:
 
     def setButton(self, button: Button):
         self.button = button 
-
   
 
 
