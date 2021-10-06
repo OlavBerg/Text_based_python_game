@@ -117,7 +117,7 @@ class Room:
         self.button = button 
 
     def containsLamp(self):
-        if self.lamp == None:
+        if self.lamp != None:
             return True
         else:
             return False
