@@ -86,9 +86,12 @@ class Room:
         self.getDoor.rotate(self.listOfDoor)
         print("list after rotate")
         return self.getDoor() """
-        
+    
 
     def isFinnish(self):
+        return self.finnish
+
+    def setToFinnish(self):
         """Returns True if the room is a finnish room. Returns False otherwise."""
         self.finnish = True
 
