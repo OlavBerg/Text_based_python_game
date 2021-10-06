@@ -165,7 +165,7 @@ class Game:
                 riddleSolved = riddle.activate()
 
                 if riddleSolved:
-                    pass
+                    self.currentRoom().removeRiddle()
                 else:
                     self.currentCoordinates = Coordinates(0, 0)
 
