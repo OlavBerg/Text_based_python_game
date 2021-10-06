@@ -102,10 +102,8 @@ class Room:
 
     def setRiddle(self, riddle: Riddle) :
         self.riddle = riddle
-        
 
-    def removeRiddle(self, riddle: Riddle) :
-        self.riddle = riddle
+    def removeRiddle(self) :
         self.riddle = None
 
     def getLamp(self, lamp: Lamp):
