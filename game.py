@@ -4,15 +4,20 @@ from key import Key
 from room_matrix import RoomMatrix
 from coordinates import Coordinates
 from inventory import Inventory
+from riddle import Riddle
 
 class Game:
     def __init__(self, roomMatrix: RoomMatrix):
         self.roomMatrix = roomMatrix
         self.currentCoordinates = Coordinates(0, 0)
         self.inventory = Inventory()
+        self.isRunning = True
 
     def currentRoom(self):
         return self.roomMatrix.getRoom(self.currentCoordinates)
+
+    def validDirection(self, direction: str):
+        return direction in ["north", "east", "south", "west"]
     
     def move(self, subCommandList: list[str]):
 
@@ -22,7 +27,7 @@ class Game:
 
         direction = subCommandList[1]
 
-        if not direction in ["north", "east", "south", "west"]:
+        if not self.validDirection(direction):
             print("Invalid direction.")
             return False
 
@@ -64,7 +69,7 @@ class Game:
 
         direction = subCommandList[1]
 
-        if not direction in ["north", "east", "south", "west"]:
+        if not self.validDirection(direction):
             print("Invalid direction.")
             return False
 
@@ -178,14 +183,14 @@ class Game:
                 color = key.getColor()
                 shape = key.getShape()
                 print("• " + color.capitalize() + " " + shape.lower() + " key")
+
             elif isinstance(item, Flashlight):
                 print("• Flashlight")
 
 
     def printGameState(self):
-        """Prints the state if the game. Includes the current room, the doors in the room and the keys on the floor."""
+        """Prints the state if the game. Includes the current room, the doors in the room and the items on the floor."""
         print("--------------------------------------------------------------------------------------------------------------------------------------------------------")
-
 
         print("Current room: " + self.currentCoordinates.toString())
 
@@ -213,19 +218,66 @@ class Game:
         print("Commands")
         print("----------------------------------------------------------------------------------------------------------------------------------------------------------")
         print("• move {north/east/south/west}                                        Move in the given direction.")
-        print("• pick {key color} {key shape}                                        Pick up the key with the given color and shape.")
+        print("• pick {item name}                                                    Pick up the item with the given name.")
         print("• unlock {north/east/south/west} {key color} {key shape}              Unlock the door in the given direction using the key with the given color and shape.")
         print("• quit                                                                Quit the game.")
         print("• c                                                                   Show possible commands.")
         print("")
 
+    def checkForRiddle(self):
+        riddle = self.currentRoom().getRiddle()
+            
+        if riddle != None:
+            riddleSolved = riddle.activate()
+
+            if riddleSolved:
+                self.currentRoom().removeRiddle()
+            else:
+                self.currentCoordinates = Coordinates(0, 0)
+
+    def start(self):
+        print("Welcome to the game!")
+        self.isRunning = True
+    
+    def quit(self):
+        print("Quitting the game.")
+        self.isRunning = False
+
+    def enterCommand(self):
+        print("Type 'c' to show possible commands.")
+        print("")
+
+        while True:
+            command = input("Command: ").lower()
+            subCommandList = command.split(" ")
+
+            successfulCommand = False
+
+            if subCommandList[0] == "move":
+                successfulCommand = self.move(subCommandList)
+            elif subCommandList[0] == "pick":
+                successfulCommand = self.pick(subCommandList)
+            elif subCommandList[0] == "unlock":
+                successfulCommand = self.unlock(subCommandList)
+            elif subCommandList[0] == "quit":
+                self.quit()
+                break
+            elif subCommandList[0] == "c":
+                self.showCommands()
+                continue
+            else:
+                print("Invalid command. Please type 'c' for a list of possible commands.")
+                continue
+
+            if successfulCommand:
+                break
+
     def run(self):
         """Runs the game."""
 
-        isRunning = True
-        print("Welcome to the game!")
+        self.start()
 
-        while isRunning:
+        while self.isRunning:
             print("")
 
             if self.currentRoom().isFinnish():
@@ -233,56 +285,11 @@ class Game:
                 isRunning = False
                 break
 
-            riddle = self.currentRoom().getRiddle()
-            
-            if riddle != None:
-                riddleSolved = riddle.activate()
-
-                if riddleSolved:
-                    self.currentRoom().removeRiddle()
-                else:
-                    self.currentCoordinates = Coordinates(0, 0)
-
+            self.checkForRiddle()
 
             self.printGameState()
             print("")
-            print("Type 'c' to show possible commands.")
-            print("")
-
-            while True:
-                playerCommand = input("Command: ").lower()
-                subCommandList = playerCommand.split(" ")
-
-                if subCommandList[0] == "move":
-                    if self.move(subCommandList):
-                        break
-                    else:
-                        continue
-
-                elif subCommandList[0] == "pick":
-                    if self.pick(subCommandList):
-                        break
-                    else:
-                        continue
-
-                elif subCommandList[0] == "unlock":
-                    if self.unlock(subCommandList):
-                        break
-                    else:
-                        continue
-
-                elif subCommandList[0] == "quit":
-                    isRunning = False
-                    print("Quitting the game.")
-                    break
-
-                elif subCommandList[0] == "c":
-                    self.showCommands()
-                    continue
-
-                else:
-                    print("Invalid command. Please type 'c' for a list of possible commands.")
-                    continue
+            self.enterCommand()
 
                 
                     
