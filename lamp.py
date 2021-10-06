@@ -5,12 +5,12 @@ class Lamp :
         self.initiallyLightOff = initallyLightOff
 
     def lightsOn(self, button: Button) :
-        if Button.On :
+        if button.On :
             self.initiallyLightOff = False
             
     
     def lightsOff(self, button: Button) :
-        if Button.Off :
+        if button.Off :
             self.initiallyLightOff 
             
     
