@@ -15,13 +15,19 @@ class Inventory:
         except:
             pass
 
+    def getItems(self):
+        return self.itemList
+
     def getKey(self, color: str, shape: str):
         retrievedKey = None
 
-        for key in self.getItemsOfType(Key):
-            if key.getColor() == color and key.getShape() == shape:
-                retrievedKey = key
-                break
+        for item in self.itemList:
+            if isinstance(item, Key):
+                key = item
+
+                if key.getColor() == color and key.getShape() == shape:
+                    retrievedKey = key
+                    break
 
         return retrievedKey
 
