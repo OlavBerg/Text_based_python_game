@@ -8,12 +8,24 @@ class Flashlight(Item) :
     def turnOnFlashLight(self):
         if self.turnOn == False:
             self.turnOn = True
-        print("Light is flashing!")
-    
+
     def turnOffFlashlight(self):
         if self.turnOn == True:
             self.turnOn = False
-        print("Flashlight is turned off!")
+
+    def getTurnOn(self):
+        return self.turnOn
+    
+    
+   
+        
+    
+
+    
+   
+        
+    
+    
 
        
     

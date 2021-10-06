@@ -52,12 +52,12 @@ myRoom.removeKey(myKey)
 testFunc.printKeyList(myRoom) 
 
 # Test 6: Test the FlashLight
-
 print("I can't see anything, it's so dark...")
 print("I can use my flashlight...")
 myFlashlight.turnOnFlashLight()
 print("I want to turn off my flashlight...")
 myFlashlight.turnOffFlashlight()
+
 
 
 
