@@ -2,25 +2,16 @@ from flashlight import Flashlight
 from key import Key
 from room_matrix import RoomMatrix
 from coordinates import Coordinates
+from inventory import Inventory
 
 class Game:
     def __init__(self, roomMatrix: RoomMatrix):
         self.roomMatrix = roomMatrix
         self.currentCoordinates = Coordinates(0, 0)
-        self.inventory = []
+        self.inventory = Inventory()
 
     def currentRoom(self):
         return self.roomMatrix.getRoom(self.currentCoordinates)
-
-    def getFlashlight(self):
-        flashlight = None
-
-        for item in self.inventory:
-            if isinstance(item, Flashlight):
-                flashlight = item
-                break
-
-        return flashlight
 
     def move(self, direction: str):
         """If possible, moves the player to the next room in the given direction, which is either 'n', 'e', 's' or 'w'."""
@@ -41,7 +32,7 @@ class Game:
             print("There is a solid wall behind the door.")
             return False
         elif not nextRoom.containsLamp():
-            flashlight = self.getFlashlight()
+            flashlight = self.inventory.getFlashlight()
 
             if flashlight == None:
                 print("The room has no lights. You need a flashlight to enter this room.")
@@ -131,14 +122,9 @@ class Game:
 
         print("")
 
-        print("Keys in your inventory")
-        print("----------------------")
-
-        for key in self.inventory:
-            color = key.getColor()
-            shape = key.getShape()
-            
-            print("• " + color.capitalize() + " " + shape.lower())
+        print("Inventory")
+        print("---------")
+        self.inventory.print()
 
     def showCommands(self):
         print("")
@@ -150,25 +136,6 @@ class Game:
         print("• quit                                                                Quit the game.")
         print("• c                                                                   Show possible commands.")
         print("")
-
-    def getInventoryItemsOfType(self, itemType: type):
-        itemList = []
-
-        for item in self.inventory:
-            if isinstance(item, itemType):
-                itemList.append(item)
-
-        return itemList
-
-    def getKeyFromInventory(self, color: str, shape: str):
-        selectedKey = None
-        
-        for key in self.getInventoryItemsOfType(Key):
-            if key.getColor() == color and key.getShape() == shape:
-                selectedKey = key
-                break
-        
-        return selectedKey
 
     def run(self):
         """Runs the game."""
@@ -208,7 +175,6 @@ class Game:
                             continue
 
                         direction = direction[0]
-                        
                         if self.move(direction):
                             break
                         else:
@@ -227,7 +193,7 @@ class Game:
                         direction = subCommands[1]
                         keyColor = subCommands[2]
                         keyShape = subCommands[3]
-                        key = self.getKeyFromInventory(keyColor, keyShape)
+                        key = self.inventory.getKey(keyColor, keyShape)
                         
                         if not direction in ["north", "east", "south", "west"]:
                             print("Invalid direction.")
