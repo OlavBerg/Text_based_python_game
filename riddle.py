@@ -21,7 +21,7 @@ class Riddle:
                 tries += 1
         
         if tries == 2:
-            print("You have answered incorrectly three times you will now be sent back.")
+            print("You have answered incorrectly two times you will now be sent back.")
             False
         
     def answer(self):
