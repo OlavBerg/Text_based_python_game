@@ -7,11 +7,12 @@ class Button :
     def On(self) :
         self.on = True
 
-    
     def Off(self) :
         self.on = False
     
-        
+    def getOn(self):
+        return self.on
+    
     
 
 
