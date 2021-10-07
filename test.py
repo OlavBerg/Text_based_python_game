@@ -47,7 +47,7 @@ roomMatrix.getRoom(Coordinates(0, 1)).setRiddle(riddle)
 
 roomMatrix.getRoom(Coordinates(1, 1)).lamp = None
 
-roomMatrix.getRoom(Coordinates(0, 2)).setToFinnish()
+roomMatrix.getRoom(Coordinates(0, 2)).setToFinish()
 
 game = Game(roomMatrix)
 game.run()

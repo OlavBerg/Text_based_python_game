@@ -289,8 +289,8 @@ class Game:
         while self.isRunning:
             print("")
 
-            if self.currentRoom().isFinnish():
-                print("Congratulations! You reached the finnish room!")
+            if self.currentRoom().isFinish():
+                print("Congratulations! You reached the finish room!")
                 self.isRunning = False
                 break
 

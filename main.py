@@ -12,8 +12,8 @@ print("")
 roomMatrix = RoomMatrix(5, 5)
 roomMatrix.fillWithEmptyRooms()
 
-finnishRoom = roomMatrix.getRoom(Coordinates(1, 3))
-finnishRoom.setToFinnish()
+finishRoom = roomMatrix.getRoom(Coordinates(1, 3))
+finishRoom.setToFinish()
 
 # Keys and locked doors
 key1 = Key("red", "circle")

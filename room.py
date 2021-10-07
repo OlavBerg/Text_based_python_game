@@ -21,7 +21,7 @@ class Room:
         else:
             self.itemsOnFloor = itemsOnFloor
 
-        self.finnish = False #True if the room is the finnish room. False otherwise.
+        self.finish = False #True if the room is the finish room. False otherwise.
 
         self.riddle = riddle
 
@@ -88,16 +88,16 @@ class Room:
         return self.getDoor() """
     
 
-    def isFinnish(self):
-        return self.finnish
+    def isFinish(self):
+        return self.finish
 
-    def setToFinnish(self):
-        """Returns True if the room is a finnish room. Returns False otherwise."""
-        self.finnish = True
+    def setToFinish(self):
+        """Returns True if the room is a finish room. Returns False otherwise."""
+        self.finish = True
 
     def isEmpty(self):
         """Returns True if the room contains no doors and no items. Returns False otherwise."""
-        if self.listOfDoor == None and self.itemsOnFloor == None and self.finnish == False:
+        if self.listOfDoor == None and self.itemsOnFloor == None and self.finish == False:
             return True
 
     def getRiddle(self) :

@@ -125,7 +125,7 @@ class RoomMatrix:
             lockedDoor.setColor(color)
             lockedDoor.setShape(shape)
 
-        finnishRoom = milestoneCoordinatesList[-1]
-        finnishRoom.setToFinnish()
+        finishRoom = milestoneCoordinatesList[-1]
+        finishRoom.setToFinish()
     """
 
